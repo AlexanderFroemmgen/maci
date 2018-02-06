@@ -1,0 +1,15 @@
+<h4>Required Capabilities</h4>
+<div class="panel panel-default panel-body" style="padding:10px">
+    <p>Specify capabilities which have to be provided by the execution environment.</p>
+    <p class="bg-info" ng-show="capabilities.length == 0">No requirements.</p>
+    <ul class="list-inline">
+        <li ng-repeat="cap in capabilities" class="sim-parameter-box">
+            <span class="sim-parameter-value">{{cap}}</span>
+            <button class="btn btn-sm btn-link" ng-click="removeCapability(cap)">&times;</button> 
+        </li>
+    </ul>
+    <form class="form-inline">
+        <input type="text" class="form-control" ng-model="newCapability" placeholder="Capability name">
+        <button class="btn btn-default" ng-click="addCapability(newCapability); newCapability = ''">Add</button>
+    </form> 
+</div>

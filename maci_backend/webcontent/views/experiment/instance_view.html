@@ -1,0 +1,66 @@
+<div ng-controller="ExperimentInstanceViewController">
+    <h1>Experiment {{sid}} - Instance {{instanceid}}</h1>
+
+    <h4>Status</h4>
+    <p>{{instance.Status | formatStatus}}</p>
+    <span ng-if="instance.AssignedServer.length> 0">
+        <h4>Assigned Server</h4>
+        <input type="text" style="position:absolute;left:-9999px;top:0" id="copyTarget" value="ssh {{instance.AssignedServer}}">
+        <p>{{instance.AssignedServer}}<button class="btn btn-sm btn-link" ng-click="copySSHConnectionString()">Copy SSH</button></p>
+    </span>
+
+    <div ng-if="instance.Log">
+        <h4>Standard output</h4>
+        <pre>{{instance.Log}}</pre>
+    </div>
+
+    <div ng-if="instance.LogMessages">
+        <h4>Log Messages</h4>
+        <table class="table table-vertical-center">
+            <tr>
+                <th>Key</th>
+                <th>Type</th>
+                <th>Offset</th>
+                <th>Message</th>
+            </tr>
+            <tr ng-repeat="message in instance.LogMessages" ng-class="['bg-info', 'bg-warning'][message.Type]">
+                <td>{{message.Key}}</td>
+                <td>{{['Info', 'Warning'][message.Type]}}</td>
+                <td>{{message.Offset}}</td>
+                <td><pre>{{message.Message}}</pre></td>
+            </tr>
+        </table>
+    </div>
+    
+    <h4>Configuration</h4>
+    <ul>
+        <li ng-repeat="(name, value) in instance.Configuration">
+            <strong>{{name}}</strong>: {{value}}
+        </li>
+    </ul>
+
+    <h4>Records</h4>
+    <div class="form-group">
+      <div class="input-group">
+        <div class="input-group-addon"><i class="fa fa-search"></i></div>
+        <input type="text" class="form-control" placeholder="Filter" ng-model="recordsFilter">
+      </div>      
+    </div>    
+    <table class="table table-striped table-vertical-center">
+        <tr>
+            <th>
+                <a href="#" ng-click="recordsSortType = 'Key'">Key<span ng-show="sortType == 'Key'" class="fa fa-caret-down"></span></a>
+            </th>
+            <th>Offset</th>
+            <th>Value</th>
+        </tr>
+        <tr ng-repeat="record in records | orderBy:['Key', 'Offset'] | filter:recordsFilter">
+            <td>{{record.Key}}</td>
+            <td>{{record.Offset}}</td>
+            <td>{{record.Value}}</td>
+        </tr>
+        <tr ng-show="records.length == 0">
+            <td class="warning" colspan="100">No records so far...</td>
+        </tr>
+    </table>
+</div>

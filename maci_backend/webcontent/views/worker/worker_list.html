@@ -1,0 +1,22 @@
+<table class="table table-striped" ng-controller="WorkerListController">
+    <tr>
+        <th>Token</th>
+        <th>Connection</th>
+        <th>Capabilities</th>
+        <th>Registration time</th>
+        <th>Last request time</th>
+        <th>Status</th>
+    </tr>
+    <tr ng-repeat="worker in workers">
+        <td>{{worker.Token}}</td>
+        <td>{{worker.ConnectionInfo}}</td>
+        <td>{{worker.Capabilities.join(', ')}}</td>
+        <td>{{worker.RegistrationTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td ng-class="{'warning': olderThanXMinutes(worker.LastRequestTime, 15)}">{{worker.LastRequestTime | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td ng-show="worker.ActiveExperimentInstanceId == null" class="info">Idle</td>
+        <td ng-show="worker.ActiveExperimentInstanceId !== null" class="success">Working on instance <a class="btn btn-link" ng-href="#/experiments/{{worker.ActiveExperimentId}}/instances/{{worker.ActiveExperimentInstanceId}}">{{worker.ActiveExperimentInstanceId}}</a></td>
+    </tr>
+    <tr ng-show="workers.length == 0">
+        <td class="warning" colspan="100">There are no registered workers. Check <a href="#/workerhosts">Worker Hosts</a> to add worker instances.</td>
+    </tr>
+</table>

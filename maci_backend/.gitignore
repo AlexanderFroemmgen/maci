@@ -1,0 +1,4 @@
+appsettings.*.json
+AppData/JupyterNotebook/*/**
+wwwroot/*
+maci_data.db

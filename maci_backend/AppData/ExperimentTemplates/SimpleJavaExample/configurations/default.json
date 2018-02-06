@@ -1,0 +1,1 @@
+{"parameters":[{"Type":1,"Purpose":1,"Name":"number_of_nodes","Unit":"","Values":[10,20,50],"$$hashKey":"object:54"},{"Type":1,"Purpose":1,"Name":"avg_node_degree","Unit":"","Values":[2,5,10],"$$hashKey":"object:62"}],"capabilities":[]}

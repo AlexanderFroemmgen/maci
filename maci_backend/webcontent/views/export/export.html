@@ -1,0 +1,51 @@
+<div ng-controller="ExportController">
+    <h1>Export</h1>
+
+    <h2>General Information</h2>
+
+    <div class="form-group form-inline">
+        <input type="text" class="form-control" ng-model="exportName" placeholder="Name">
+        <input type="text" class="form-control" ng-model="exportDescription" placeholder="Description">
+    </div>
+
+    <h2>Select Experiments</h2>
+
+    <table class="table table-striped table-vertical-center">
+        <tr>
+            <th></th>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Created</th>
+            <th>Status</th>
+            <th>Finished</th>
+            <th>Running</th>
+            <th>Pending</th>
+            <th>Error</th>
+        </tr>
+        <tr ng-repeat="experiment in experiments">
+            <td><input type="checkbox" ng-model="experiment.isChecked"/></td>
+            <td>{{experiment.Id}}</td>
+            <td>{{experiment.FileName}} ({{experiment.RunName}})</td>
+            <td>{{experiment.Created | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+            <td>
+                <span ng-show="!experiment.LastAssigned.startsWith('0001')">
+                    {{experiment.LastAssigned | date:'yyyy-MM-dd HH:mm:ss'}}
+                </span>
+            </td>
+            <td ng-class="getStatusCellBgClass(experiment.Status)">{{experiment.Status | formatStatus}}</td>
+            <td align="right">{{(experiment.Statistics['Finished'] || 0)}}</td>
+            <td align="right">{{(experiment.Statistics['Running'] || 0)}}</td>
+            <td align="right">{{(experiment.Statistics['Pending'] || 0)}}</td>
+            <td align="right">{{(experiment.Statistics['Error'] || 0)}}</td>
+        </tr>
+        <tr ng-show="experiments.length == 0">
+            <td class="warning" colspan="100%">There are no experiments.</td>
+        </tr>
+    </table>
+
+    <h2>Export</h2>
+    <p>The export considers all experiment data, i.e., the raw data as well as the analysis scripts.</p>
+    <div class="form-group form-inline">
+        <button class="btn btn-lg btn-primary" ng-click="export()">Export</button>
+    </div>
+</div>

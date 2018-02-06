@@ -1,0 +1,48 @@
+<div>
+    <h3>Working with Jupyter</h3>
+    <p>If you want to modify/extend the existing functionality, you should read a <a href="http://jupyter-notebook-beginner-guide.readthedocs.io/en/latest/what_is_jupyter.html">jupyter tutorial</a> and a <a href="https://pandas.pydata.org/pandas-docs/stable/10min.html">pandas tutorial</a>.</p>
+    <p>For remote access to jupyter, follow <a href=http://jupyter-notebook.readthedocs.io/en/latest/public_server.html> Running a public notebook server</a>.</p>
+
+    <h4>Tweak your Figures</h4>
+    <p>Provide a modified callback function to tweak generated figures. In the following, we collected a few snippets we found useful.</p>
+<pre>
+def my_callback():
+    # set x label
+    plt.xlabel("")
+
+    # set y label
+    plt.ylabel("Size [Bytes]")
+
+    # set y range
+    plt.ylim([0, 4000000])
+
+    # use log scale
+    plt.yscale('log')
+
+    # set plot title
+    plt.title("Total Message Overhead")
+    
+    # set plot size
+    fig = plt.gcf()
+    fig.set_size_inches(4, 3) # width and height
+
+    # set x tick labels
+    ax = plt.gca()
+    ax.set_xticklabels(["foo", "bar"], rotation=30)
+
+    # add an additional line
+    # x1, x2, y1, y2
+    plt.plot([0.0, 10000000], [500, 500], 'k--', lw=1, label="Storage boundary")
+</pre>
+
+    <h4>Reuse modified Notebooks?</h4>
+
+    <h4>I changed my mind.... Move a configuration paramter to an environment parameter.</h4>
+    <p>MACI generates evaluations based on the provided configuration and enviornment parameters. You might want to make a configuration parameter an environment parameter.</p>
+<pre>
+    configurationParameters.append('maxStorage')
+    environmentParameters.remove('maxStorage')
+    display(configurationParameters)
+    display(environmentParameters)
+</pre>
+</div>

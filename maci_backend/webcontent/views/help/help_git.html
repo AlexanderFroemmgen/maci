@@ -1,0 +1,25 @@
+﻿<div>
+    <h3>Configure the Git Integration</h3>
+    <p>To enable the Git integration, you need to store your remote credentials in the appsettings.json file.
+
+        For Github, go to <a href="https://github.com/settings/tokens" target="_blank">https://github.com/settings/tokens</a> and 
+        generate a Personal Access Token. For other remotes, you may need to put your password in the AccessToken field.</p>
+    <pre>
+  "Git": {
+    "RemoteCredentials": {
+      "Username": "<u>your username</u>",
+      "AccessToken": "<u>your access token</u>"
+    }
+  }
+</pre>
+  
+    
+    <h3>Configure the Git Remote for a repository </h3>  
+    <p>To enable automatic pushing the repository to a remote, just add the remote with the name <code>origin</code>
+        to the underlying repository. The remote needs to use the <code>https://</code> protocol as the used library doesn't support SSH remotes.</p>
+    <pre>
+cd <u>$DataLocation</u>/ExperimentTemplates/<u>$TemplateName</u>
+git remote add origin <u>https://github.com/username/reponame</u>
+</pre>
+
+</div>

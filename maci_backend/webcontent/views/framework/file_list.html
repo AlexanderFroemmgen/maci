@@ -1,0 +1,9 @@
+<h1>Framework files</h1>
+
+<div ng-controller="FrameworkFileListController">
+<p>List of files that are bundled with every experiment script. You can put additional files into <em>{{datalocation}}/ExperimentFramework</em>.</p>
+
+<ul>
+    <li ng-repeat="file in files">{{file}}</li>
+</ul>
+</div>

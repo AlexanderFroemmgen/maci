@@ -1,0 +1,116 @@
+<div ng-controller="HostListController">
+    <h1>Worker Hosts <button class="btn btn-default" ng-click="reload()">Reload</button></h1>
+
+    <h4>Configuration</h4>
+    <form class="form-group form-inline">
+        <label for="time">Max idle time before shutdown:</label>
+        <select class="form-control" ng-model="maxIdleTimeSec">
+            <option value="5">5 seconds</option>
+            <option value="60">1 minute</option>
+            <option value="600">10 minutes</option>
+            <option value="3600">1 hour</option>
+            <option value="-1">never</option>
+        </select>
+        <button class="btn btn-primary" ng-click="setTimeout()">Set</button>
+    </form>
+    <p>Note that the <strong>max idle time before shutdown</strong> is set at the boottime of the instance. Changing the configuration later does not affect already started instances.</p>
+
+    <h2>Manual management</h2>
+    <p>Alternatives:</p>
+    <ul>
+        <li><a ng-href="workers/bootstrap.sh">Download</a> the bootstrap script to manually bootstrap (install and start) new worker instances (recommended).</li>
+        <li><a ng-href="workers/script.py">Download</a> the worker script to manually start worker, e.g., use <code>python -u script.py --backend {{backend}} --capabilities replaceIfRequired</code> to manually call an existing worker script.</li>
+    </ul>
+    <p ng-show="warning_backend_localhost" style="color:red">It seems the backend is running on the localhost. Automatic detection of the backend IP failed. Please specify the correct backend location in the bootstrap script and when starting the worker.</p>
+
+    <h2>Automated management</h2>
+    <h3>Running instances</h3>
+    <p>This list shows all running instances at the configured AWS accounts which are tagged with <strong>maci</strong>.</p>
+    <table class="table table-striped table-vertical-center">
+        <tr>
+            <th>Host ID</th>
+            <th>Instance ID</th>
+            <th>Image ID</th>
+            <th>Status</th>
+            <th></th>
+        </tr>
+        <tr ng-repeat="instance in instances">
+            <td>{{instance.HostId}}</td>
+            <td>{{instance.Id}}</td>
+            <td>{{instance.ImageId}}</td>
+            <td>{{instance.Status}}</td>
+            <td><button class="btn btn-danger" ng-click="terminate(instance.HostId, instance.Id)">Terminate</button></td>
+        </tr>
+        <tr ng-show="instances.length == 0">
+            <td class="warning" colspan="100%">There are no running instances.</td>
+        </tr>
+        <tr ng-show="images == undefined">
+            <td class="warning" colspan="100%">Can't check for running instances.</td>
+        </tr>
+    </table>
+
+    <h3>Available images</h3>
+    <table class="table table-striped table-vertical-center">
+        <tr>
+            <th>Host ID</th>
+            <th>Image ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Capabilities</th>
+            <th></th>
+            <th>Autoscaling</th>
+        </tr>
+        <tr ng-repeat="image in images">
+            <td>{{image.HostId}}</td>
+            <td>{{image.Id}}</td>
+            <td>{{image.Name}}</td>
+            <td><small>{{image.Description}}</small></td>
+            <td>{{image.Capabilities.join(', ')}}</td>
+            <td><button class="btn btn-primary" ng-click="launch(image.HostId, image.Id)">Launch</button></td>
+            <td>
+                <button ng-show="!image.AutoScale" class="btn btn-primary" ng-click="setScaling(image.Id, 1)">Activate Autoscaling</button>
+                <button ng-show="image.AutoScale" class="btn btn-primary" ng-click="setScaling(image.Id, 2)">Deactivate Autoscaling</button>
+            </td>
+        </tr>
+        <tr ng-show="images.length == 0">
+            <td class="warning" colspan="100%">There are no available images.</td>
+        </tr>
+        <tr ng-show="images == undefined">
+            <td class="warning" colspan="100%">Can't check for available images.</td>
+        </tr>
+    </table>
+    <h3>Autoscaling</h3>
+    <p>Autoscaling checks for available images whenever new experiment instances are added. When currently less than 50 instances are running, more than 50 instances are pending, and 10 times more instances are pending than running, it starts <code>pending / 10</code> new worker, but at most 10.</p>
+
+    <h2>Configure AWS</h2>
+    <p>
+        Configure AWS at <code>Backend/src/Backend/appsettings.json</code> as <em>WorkerHosts</em> following this pattern:
+
+        <pre>
+{
+    "Type": "aws",
+    "AccessKey": "AWS ACCESS KEY",
+    "SecretKey": "AWS SECRET KEY",
+    "InstanceType": "t2.micro",     // Instance type to use for each worker instance
+    "Backend": "127.0.0.1:63658"    // URL/IP of the worker host from a worker's perspective
+}    </pre>
+    <p>You can find or create access keys for aws <a href="https://console.aws.amazon.com/iam/home?region=eu-central-1#/home">here</a></p>
+    <h4>Setting up your AWS account and importing images as AMI</h4>
+
+    <ul>
+        <li>Navigate to <code>.\Backend\src\AwsSetupTool\</code></li>
+        <li>Install dependencies with <code>dotnet restore</code>.</li>
+        <li>Launch with <code>dotnet run</code> and follow the instructions</li>
+        <li>After importing, add a tag <code>massexec</code> to the image. Otherwise the backend will ignore the image. The value of the tag is a comma-seperated list of capabilities the image provides (e.g., tag with key `massexec` and value `mininet,mptcp`)</li>
+    </ul>
+
+    <p>Prerequisites for an image before importing as AMI</p>
+    <ul>
+        <li><code>cloud-init</code> must be installed.</li>
+        <li>The image must be in OVA format (e.g., by exporting with VirtualBox).</li>
+    </ul>
+    Alternatively, launch an instance with a base AMI, install you software, and save the modifications as an AMI (context menu: Image > Create Image).
+    <h2>Security Considerations</h2>
+    <p>You should make sure that your MACI instance is accessible from the workers. We recommend to use security groups in the AWS firewall, e.g., as described <a href="http://docs.aws.amazon.com/AWSEC2/latest/UserGuide/using-network-security.html#adding-security-group-rule">here</a>. 
+    Just add a security group to all launched workers (specify it in the appsettings.json) and add a rule to your MACI instance allowing incoming traffic on port 63658 for this group.</p>
+</div>

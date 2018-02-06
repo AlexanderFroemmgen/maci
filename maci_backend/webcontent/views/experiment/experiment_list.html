@@ -1,0 +1,33 @@
+<table class="table table-striped table-vertical-center" ng-controller="ExperimentListController">
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Created</th>
+        <th>Last Assigned</th>
+        <th>Status</th>
+        <th>Finished</th>
+        <th>Running</th>
+        <th>Pending</th>
+        <th>Error</th>
+        <th></th>
+    </tr>
+    <tr ng-repeat="experiment in experiments">
+        <td>{{experiment.Id}}</td>
+        <td>{{experiment.FileName}} ({{experiment.RunName}})</td>
+        <td>{{experiment.Created | date:'yyyy-MM-dd HH:mm:ss'}}</td>
+        <td>
+            <span ng-show="!experiment.LastAssigned.startsWith('0001')">
+                {{experiment.LastAssigned | date:'yyyy-MM-dd HH:mm:ss'}}
+            </span>
+        </td>
+        <td ng-class="getStatusCellBgClass(experiment.Status)">{{experiment.Status | formatStatus}}</td>
+        <td align="right">{{(experiment.Statistics['Finished'] || 0)}}</td>
+        <td align="right">{{(experiment.Statistics['Running'] || 0)}}</td>
+        <td align="right">{{(experiment.Statistics['Pending'] || 0)}}</td>
+        <td align="right">{{(experiment.Statistics['Error'] || 0)}}</td>
+        <td><a class="btn btn-link" href="#/experiments/{{experiment.Id}}">View</a></td>
+    </tr>    
+    <tr ng-show="experiments.length == 0">
+        <td class="warning" colspan="100%">There are no experiment studies.</td>
+    </tr>
+</table>

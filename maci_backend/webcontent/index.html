@@ -1,0 +1,43 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MACI Research</title>
+
+<link rel="stylesheet" href="/lib/css/bootstrap.css">
+<link rel="stylesheet" href="/lib/css/angular-ui-notification.css">
+<link rel="stylesheet" href="/css/style.css">
+</head>
+
+<body ng-app="frontend">
+    <div ng-include="'views/topnav.html'"></div>
+    <div ng-view class="container"></div>
+
+    <script src="/lib/monaco-editor/min/vs/loader.js"></script>
+    <script src="/lib/js/angular.min.js"></script>
+    <script src="/lib/js/angular-route.min.js"></script>
+    <script src="/lib/js/angular-ui-notification.min.js"></script>
+    <script src="/lib/js/jquery.min.js"></script>
+    <script src="/lib/js/bootstrap.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/routes.js"></script>
+    <script src="/js/filters/formatStatus.js"></script>
+    <script src="/js/services/State.js"></script>
+    <script src="/js/services/Utils.js"></script>
+    <script src="/js/directives/convertToNumber.js"></script>
+    <script src="/js/directives/dragDropUpload.js"></script>
+    <script src="/js/controllers/HelpLanguageController.js"></script>
+    <script src="/js/controllers/HelpConceptsController.js"></script>
+    <script src="/js/controllers/ExperimentListController.js"></script>
+    <script src="/js/controllers/ExperimentCreateController.js"></script>
+    <script src="/js/controllers/ExperimentViewController.js"></script>
+    <script src="/js/controllers/ExperimentInstanceViewController.js"></script>
+    <script src="/js/controllers/WorkerListController.js"></script>
+    <script src="/js/controllers/HostListController.js"></script>
+    <script src="/js/controllers/FrameworkFileListController.js"></script>
+    <script src="/js/controllers/ExportController.js"></script>
+    <script src="/js/controllers/GlobalEventLogController.js"></script>
+</body>
+</html>

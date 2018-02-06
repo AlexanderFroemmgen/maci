@@ -1,0 +1,32 @@
+<div>
+    <h3>API</h3>
+    <p>You may use the REST API to control experiment execution.</p>
+    
+    <h3>Java Examples</h3> 
+    <p>Check the Java API examples at <code>/API/Java/MACI</code>.</p>
+
+    <h3>Python Examples</h3>
+    <p>We do not provide a full Python API so far, butprovide a few Python snippets as API examples.
+    We found these snippets helpful to manage larger projects.</p>
+
+    <h4>Deleting a bunch of Experiments</h4>
+    <pre>
+import httplib
+for i in range(1, 100):
+    conn = httplib.HTTPConnection('localhost:63658')
+    conn.request('DELETE', '/experiments/' + str(i)) 
+    resp = conn.getresponse()
+    content = resp.read()
+    print "Experiment", i, "passed away..."
+</pre>
+    
+    <h4>Resetting Experiments</h4>
+    <pre>
+import httplib
+conn = httplib.HTTPConnection('10.0.254.22:63658')
+conn.request('POST', '/experiments/17/instances/148231/reset') 
+resp = conn.getresponse()
+content = resp.read()
+print content
+</pre>
+</div>

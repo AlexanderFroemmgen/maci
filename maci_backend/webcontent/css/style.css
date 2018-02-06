@@ -1,0 +1,47 @@
+.sim-parameter-box {
+    border: 1px solid #ddd;
+    background-color: #f5f5f5;
+    border-radius: 3px;
+    margin: 0 3px;
+}
+
+.sim-parameter,
+.sim-parameter-value {
+    font-family: monospace;
+    background-color: #ddd;
+    padding: 2px 10px;
+    border-radius: 3px;
+}
+
+p.bg-warning, p.bg-info, p.bg-success, p.bg-danger, p.bg-primary {
+    padding: 6px 10px;
+}
+
+.table.table-vertical-center td {
+    vertical-align: middle;
+}
+
+
+/* Starting for loader: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_loader */
+.loader {
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid #3498db;
+  width: 40px;
+  height: 40px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* end for loader */

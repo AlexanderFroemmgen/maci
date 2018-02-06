@@ -1,0 +1,183 @@
+<div class="container fill" ng-controller="ExperimentCreateController" ng-keydown="keyDownFunc($event)" id="simulatin_create">
+    <div class="col-md-8">
+        <div id="code-editor" style="height:800px"></div>
+        <div ng-show="!noInstallScript">
+            <hr />
+            <h4>Install Script</h4>
+            <p>The install script is a Python script which is executed once before the first experiment. Use the install script to install dependencies.</p>
+            <div id="code-editor-install" style="height:400px"></div>
+        </div>
+
+        <h4>Bundled Experiment Files</h4>
+        <div class="panel panel-default panel-body" ng-show="storedSimName" drag-drop-upload-target uploaduri="/framework/{{selectedSimName}}" on-upload-successful="loadFrameworkFileList()">
+            <p>In addition to the <a href="#/framework">general framework files</a>, this experiment template provides the following files.</p>
+            <p>You can put additional experiment specific files into <em>{{datalocation}}/ExperimentTemplates/<strong>{{storedSimName}}</strong>/framework</em>, or drag-and-drop them here to add them to this folder.</p>
+            <div class="row" style="background-color:#d9edf7;border:dashed;margin:10px;">
+                <p class="text-center">Drag-and-drop your file here</p>
+            </div>
+            <ul>
+                <li ng-repeat="file in files">{{file}}</li>
+            </ul>
+        </div>
+        <div class="panel panel-default panel-body" ng-show="!storedSimName">
+            <p>This experiment is deployed with all <a href="#/framework">general framework files</a>. To add experiment specific files,
+            this experiment study template requires a name. Save this experiment study template to specify a name and add files.
+        </div>
+
+        <h4>History</h4>
+        <ul class="list-group">
+            <li class="list-group-item" ng-repeat="item in simHistory">
+                <span class="badge">{{ item.Date }}</span>
+                <span class="badge" title="{{ item.CommitId }}">{{ item.CommitId.substring(0,8) }}</span>
+                <!--{{ item.Author }}:--> {{ item.Message }}
+            </li>
+            <li ng-show="repoRemoteUrl" class="list-group-item list-group-item-info">
+                View remote repository: <a href="{{repoRemoteUrl}}" target="_blank">{{repoRemoteUrl}}</a>
+            </li>
+            <li ng-show="!repoRemoteUrl" class="list-group-item list-group-item-warning">
+                To find out how to configure a remote repository, <a href="#/help_git">read the Git Integration help</a>.
+            </li>
+        </ul>
+
+    </div>
+
+    <div id="controls" class="col-md-4" style="padding-left:30px">
+        <h4>Manage Experiment Templates</h4>
+        <div class="form-group form-inline">
+            <select class="form-control" ng-model="selectedSimName" ng-options="simName for simName in namesOfStoredSims"></select>
+            <button class="btn btn-default" ng-disabled="namesOfStoredSims.length == 0" ng-click="loadSim(selectedSimName)">Load</button>
+            <button class="btn btn-danger" ng-disabled="namesOfStoredSims.length == 0" ng-click="deleteSim(selectedSimName)">Delete</button>
+        </div>
+
+        <div class="form-group form-inline">
+            <input type="text" class="form-control" ng-model="storedSimName">
+            <button class="btn btn-default" ng-click="storeSim()">Store</button>
+        </div>
+
+        <h4>Manage Template Configuration</h4>
+        <div class="form-group form-inline">
+            <select class="form-control" ng-model="selectedSimConfigName" ng-options="simConfigName for simConfigName in namesOfStoredSimConfigs"></select>
+            <button class="btn btn-default" ng-disabled="namesOfStoredSimConfigs.length == 0" ng-click="loadSimConfig(selectedSimConfigName)">Load</button>
+            <button class="btn btn-danger" ng-disabled="namesOfStoredSimConfigs.length == 0" ng-click="deleteSimConfig(selectedSimConfigName)">Delete</button>
+        </div>
+
+        <div class="form-group form-inline">
+            <input type="text" class="form-control" ng-model="storedSimConfigName">
+            <button class="btn btn-default" ng-click="storeSimConfig()">Store</button>
+        </div>
+
+        <h4>Parameters</h4>
+
+        <p class="bg-info form-inline">Simulate each configuration <input type="text" class="form-control input-xs" style="width: 50px" ng-model="repetitions" ng-init="repetitions = 1" /> time(s) with  <input type="text" class="form-control input-xs" style="width: 50px" ng-model="seeds" ng-init="seeds = 1" /> different seeds.</p>
+        <p>Each experiment instance provides corresponding <i>seed</i>, <i>simId</i> and <i>simInstanceId</i> parameters.</p>
+
+        <p class="bg-info">Expected number of experiment instances: <strong>{{calculateNumberOfInstances()}}</strong></p>
+
+        <div class="panel panel-default" ng-repeat="parameter in parameterDeclarations">
+            <div class="panel-heading form-inline">
+                <span class="sim-parameter">{{PARAM_TYPES[parameter.Type]}}</span>
+                <span class="sim-parameter">{{PARAM_PURPOSES[parameter.Purpose]}}</span>
+                <span class="sim-parameter">{{parameter.Name}}<small ng-if="parameter.Unit"> / {{parameter.Unit}}</small></span>
+                <div class="clearfix"></div>
+            </div>
+            <div class="panel-body">
+                <ul class="list-inline">
+                    <li ng-repeat="value in parameterValues[parameter.Name]" class="sim-parameter-box">
+                        <span class="sim-parameter-value">{{value}}</span>
+                        <button class="btn btn-sm btn-link" ng-click="removeValue(parameter.Name, value)">&times;</button>
+                    </li>
+                </ul>
+                <p ng-show="parameter.Values.length == 0" class="bg-warning">Please add some values.</p>
+                <form class="form-inline">
+                    <input type="text" class="form-control" ng-model="newValue" placeholder="New value">
+                    <button class="btn btn-default" ng-click="addValue(parameter.Name, newValue); newValue = ''">Add</button>
+                </form>
+            </div>
+        </div>
+        
+        <div class="panel panel-default" style="padding:10px">
+            <p>Specify parameters at the top of the experiment script or use the <i>add parameter</i> dialog.</p>
+            <div class="btn-group btn-group-justified" role="group" stlye="margin-bo">
+                <a class="btn btn-default" ng-click="parseParameterDeclarations();">Update from Script</a>
+                <a class="btn btn-default" data-toggle="modal" data-target="#modal_addParameter">Add Parameter</a>
+            </div>
+            <div class="clearfix"></div>
+        </div>
+
+        <h4>Parameter Permutation Filter</h4>
+        <div class="panel panel-default" style="padding:10px">
+            <p>Filter for valid configurations and parameters with a boolean expression.</p>
+            <form class="panel-body">
+                <input type="text" class="form-control" ng-model="paramFilter" placeholder='parameterName == "name"'>
+            </form>
+        </div>
+
+        <required-capabilities></required-capabilities>
+
+        <h4>Install Script</h4>
+        <div class="panel panel-default panel-body">
+            <label style="margin-right:4px">No Install Script</label><input type="checkbox" ng-model="noInstallScript" checked />
+        </div>
+
+        <h4>Run Single Experiment</h4>
+        <div class="panel panel-default panel-body">
+            <button class="btn btn-block btn-primary" ng-click="run(true)">Run Test</button>
+
+            <p ng-show="testStatus" ng-class="getStatusCellBgClass(testStatus.lastResult.Status)">Testing Experiment <strong>{{testStatus.simId}}</strong> with Experiment Instance <strong><a href="#/experiments/{{testStatus.simId}}/instances/{{testStatus.simInstanceId}}">{{testStatus.simInstanceId}}</a></strong> with State <strong>{{testStatus.lastResult.Status  | formatStatus}}</strong> (Time so far: {{testStatus.timerS}} seconds).</p>
+            <p ng-show="testStatus && testStatus.lastResult.Status == 3" class="bg-danger">{{testStatus.lastResult.Log}}</p>
+        </div>
+
+        <h4>Run Experiment Study</h4>
+        <div class="panel panel-default panel-body">
+            <span ng-show="update_maci_msg.length > 0 || update_maci_error.length > 0">
+                <p>update_maci script output</p>
+                <textarea ng-model="update_maci_msg"></textarea>
+                <p>update_maci script error</p>
+                <textarea ng-model="update_maci_error"></textarea>
+            </span>
+            <input type="text" class="form-control" ng-model="runName" placeholder="Name">
+            <button class="btn btn-block btn-primary" ng-click="run(false)">Run Experiments</button>
+        </div>
+    </div>
+
+
+    <div class="modal fade" tabindex="-1" role="dialog" id="modal_addParameter">
+        <div class="modal-dialog" role="document">
+            <form class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Add a new parameter</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="inputNewParamName">Parameter Name</label>
+                        <input type="text" class="form-control" ng-model="newParam.Name" placeholder="my_param" id="inputNewParamName">
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNewParamType">Type</label>
+                        <select class="form-control" ng-init="newParam.Type = 1" ng-model="newParam.Type" convert-to-number id="inputNewParamType">
+                            <option value="0">String</option>
+                            <option value="1">Int</option>
+                            <option value="2">Float</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNewParamPurpose">Purpose</label>
+                        <select class="form-control" ng-init="newParam.Purpose = 0" ng-model="newParam.Purpose" convert-to-number id="inputNewParamPurpose">
+                            <option value="0">Configuration</option>
+                            <option value="1">Environment</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inputNewParamUnit">Unit (optional)</label>
+                        <input type="text" class="form-control" ng-model="newParam.Unit" placeholder="" id="inputNewParamUnit">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" ng-click="addParam();">Add Parameter</button>
+                </div>
+            </form><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+</div>

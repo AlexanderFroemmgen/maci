@@ -1,0 +1,53 @@
+<div class="container fill" ng-controller="HelpConceptsController">
+    <h3>Concepts</h3>
+    <p>MACI uses <em>Experiment Study Templates</em> to create <em>Experiment Studies</em> consisting of multiple <em>Experiments</em>, as shown in Figure 1.</p>
+
+    <figure class="figure text-center" style="padding-bottom:20px">
+        <img src="/img/model.png" class="figure-img img-fluid rounded img-responsive" style="padding:30px" />
+        <figcaption class="figure-caption text-muted">Figure 1: Experiment structure in MACI.</figcaption>
+    </figure>
+
+    <h3>Architecture</h3>
+    <p>MACI provides a <em>Web Frontend</em>, a <em>Backend</em> system consisting of a dotnet core management component and a jupyter notebook for data analysis, and <em>Worker</em> instances to scale experiment execution.</p>
+
+    <figure class="figure text-center" style="padding-bottom:20px">
+        <img src="/img/architecture.png" class="figure-img img-fluid rounded img-responsive" style="padding:30px" />
+        <figcaption class="figure-caption text-muted">Figure 2: Overall architecture of MACI.</figcaption>
+    </figure>
+
+    <h3>Backend File System</h3>
+    <p>The folder <code>{{datalocation}}</code> contains the following files which are managed by MACI:</p>
+    <ul>
+        <li>ExperimentTemplates: All experiment scripts, install scripts, and configurations as specified in the Web Frontend. These files are <strong>managed by MACI</strong></li>
+        <li>Experiments: Copies of all ExperimentFramework files with instantiated experiments. Managed by MACI.</li>
+        <li>JupyterNotebook: Data exports and Jupyter files for all experiments. Managed by MACI.</li>
+    </ul>
+    <p>The subfolder <em>ExperimentTemplates/X/framework</em> contains all required experiment files which are <strong>not managed by MACI</strong>, e.g., your actual application code. You might add all stuff you want to ship with your experiments.</p>
+
+    <h4>Sample Directory Structure</h4>
+<pre>
+ExperimentTemplates/
+	example/
+		.git/
+		script.py
+		install.py
+		update_maci.bat (optional)
+		configurations/
+			default.json
+			e.g. my_other_config.json
+		framework/
+			e.g. example.progmp
+ExperimentFramework/
+	e.g. helper.py
+</pre>
+
+    <h3>Backend Database</h3>
+    <p>Change your backend database in <code>maci_backend/appsettings.json</code>. Use either sqlite (default) or postgres.</p>
+
+    <h3>Create an Experiment Study: Behind the Scences </h3>
+    <p>The following steps are executed by MACI whenever you create a new experiment. These steps enable you to customize MACI.</p>
+    <ul>
+        <li>MACI executes the script <code>/ExperimentTemplates/X/update_maci.sh</code> if available. This might be used to pull from git repositories.</li>
+        <li>MACI copies all files from <code>/ExperimentTemplates/X/framework/* to /Experiments/Y</code>. Thus, all experiments of an experiment study use the same copy.</li>
+    </ul>
+</div>
