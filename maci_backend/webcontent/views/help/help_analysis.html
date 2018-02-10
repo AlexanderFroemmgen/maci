@@ -33,6 +33,12 @@ def my_callback():
     # add an additional line
     # x1, x2, y1, y2
     plt.plot([0.0, 10000000], [500, 500], 'k--', lw=1, label="Storage boundary")
+
+    # scale values (y-axis)
+    # import matplotlib.ticker as ticker
+    scale_y = 1000.0
+    ticks_y = ticker.FuncFormatter(lambda y, pos: '{0:g}'.format(y/scale_y))
+    ax.yaxis.set_major_formatter(ticks_y)
 </pre>
 
     <h4>Reuse modified Notebooks?</h4>
