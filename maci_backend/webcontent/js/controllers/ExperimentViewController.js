@@ -7,7 +7,8 @@ angular.module("frontend").controller("ExperimentViewController", function ($sco
     $scope.getExperimentInstances = function (pageId) {
         pageId = pageId || 1;
 
-        $http.get("experiments/" + $routeParams.id + "/" + pageId).then(function (r) {
+        var experimentStatus = $scope.showJustErrors ? "Error" : "all";
+        $http.get("experiments/" + $routeParams.id + "/" + pageId + "/" + experimentStatus).then(function (r) {
             $scope.experimentInstancesData = r.data;
         }, Utils.handleApiError);
     };

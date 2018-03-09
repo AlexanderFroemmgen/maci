@@ -119,8 +119,8 @@ namespace Backend.Controllers
             return new ObjectResult(result.Parameters);
         }
 
-        [HttpGet("{id}/{pageIndex}")]
-        public IActionResult GetExperimentInstances(int id, int pageIndex)
+        [HttpGet("{id}/{pageIndex}/{withStatus}")]
+        public IActionResult GetExperimentInstances(int id, int pageIndex, string withStatus)
         {
             var experimentInstances =
                 _context.Experiments
@@ -140,7 +140,7 @@ namespace Backend.Controllers
                 return NotFound();
             }
 
-            var result = experimentInstances.MapTo<ExperimentInstanceDto>(_mapper);
+            var result = experimentInstances.Where(ei => withStatus == "all" || ei.Status.ToString() == withStatus).MapTo<ExperimentInstanceDto>(_mapper);
 
             /* Do not transfer log messages, but generate aggregated HasWarning info */
             foreach (var si in result)
