@@ -1,1 +1,1 @@
-{"parameters":[{"Type":1,"Purpose":0,"Name":"myParameter","Unit":"","Values":[1,2,3,4],"$$hashKey":"object:44"}],"capabilities":["mininet"]}
+{"parameters":[{"Type":1,"Purpose":0,"Name":"myParameter","Unit":"","Values":[1,2,3,4],"$$hashKey":"object:44"}],"capabilities":["mininet"],"seeds": 1,"repetitions": 1}

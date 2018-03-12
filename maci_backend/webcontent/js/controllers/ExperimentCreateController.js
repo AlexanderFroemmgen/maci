@@ -195,7 +195,8 @@ angular.module("frontend").controller("ExperimentCreateController",
         };
 
         function getCurrentConfigurationJson() {
-            return JSON.stringify({ "paramValues": $scope.parameterValues, "capabilities": $scope.capabilities, "paramFilter": $scope.paramFilter });
+            return JSON.stringify({
+                "paramValues": $scope.parameterValues, "capabilities": $scope.capabilities, "paramFilter": $scope.paramFilter, "repetitions": $scope.repetitions, "seeds":$scope.seeds });
         }
 
         $scope.storeSim = function () {
@@ -254,6 +255,9 @@ angular.module("frontend").controller("ExperimentCreateController",
             });
 
             $scope.paramFilter = tmp.paramFilter;
+            $scope.repetitions = tmp.repetitions;
+            $scope.seeds = tmp.seeds;
+
         };
 
         $scope.deleteSimConfig = function (selectedSimConfigName) {
