@@ -429,7 +429,7 @@ angular.module("frontend").controller("ExperimentCreateController",
                 return ["warning", "info", "success", "danger", "danger"][statusId];
             };
 
-            $http.post("experiments", payload, {timeout: 6000}).then(function (r) {
+            $http.post("experiments", payload).then(function (r) {
                 console.log(r.data);
               
                if (r.data.Failed) {
