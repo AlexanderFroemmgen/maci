@@ -417,7 +417,7 @@ angular.module("frontend").controller("ExperimentCreateController",
                 PermutationFilter: $scope.paramFilter,
                 Repetitions: $scope.repetitions,
                 Seeds: $scope.seeds,
-                RunName: testRun ? "Test Run" : ($scope.runName || "Experiment"),
+                RunName: testRun ? ("Test Run " + $scope.selectedSimConfigName) : ($scope.runName || $scope.selectedSimConfigName),
                 FileName: fileName,
                 TestRun: testRun
             };
