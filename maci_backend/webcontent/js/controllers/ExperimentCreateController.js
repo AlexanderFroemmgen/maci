@@ -251,8 +251,25 @@ angular.module("frontend").controller("ExperimentCreateController",
             }
             // Create empty values arrays for new declarations
             $scope.parameterDeclarations.forEach(function(param) {
-                if (!$scope.parameterValues[param.Name]) $scope.parameterValues[param.Name] = [];
+                if (!$scope.parameterValues[param.Name]) {
+                    $scope.parameterValues[param.Name] = [];
+                }
             });
+
+            /* Remove values from config which are not supported in declarations any more */
+            for (var propName in $scope.parameterValues) {
+                if (!$scope.parameterValues.hasOwnProperty(propName)) {
+                    continue;
+                }
+
+                var propValues = $scope.parameterValues[propName];
+
+                if (!$scope.parameterDeclarations.some(function (paramDeclar) {
+                            return paramDeclar.Name === propName; })) {
+                    Notification("Property " + propName + " was defined in the config but not in the experiment template. Removing property.");
+                    delete $scope.parameterValues[propName];
+                }
+            }
 
             $scope.paramFilter = tmp.paramFilter;
             $scope.repetitions = tmp.repetitions;
