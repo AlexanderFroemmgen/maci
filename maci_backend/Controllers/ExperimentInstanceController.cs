@@ -345,5 +345,35 @@ namespace Backend.Controllers
 
             return Ok();
         }
+
+        /* binary blob support */
+        [HttpPost("binaryfiles/{filename}")]
+        public IActionResult AddBinaryFile([FromHeader(Name = "Worker-Token")] string token, string filename)
+        {
+            var di_experiment = new DirectoryInfo(_directoryOptions.DataLocation + "/binary_files/" + 
+                _currentExperimentInstance.Experiment.Id);
+
+            if(!di_experiment.Exists)
+            {
+                di_experiment.Create();
+            }
+
+            var di_experiment_instance = new DirectoryInfo(_directoryOptions.DataLocation + "/binary_files/" + 
+                _currentExperimentInstance.Experiment.Id + "/" + _currentExperimentInstance.Id);
+            if (!di_experiment_instance.Exists)
+            {
+                di_experiment_instance.Create();
+            }
+
+            var destFile = _directoryOptions.DataLocation + "/binary_files/" +
+                _currentExperimentInstance.Experiment.Id + "/" + _currentExperimentInstance.Id + "/" + filename;
+
+            using (var fs = new FileStream(destFile, FileMode.Create, FileAccess.Write))
+            {
+                Request.Body.CopyTo(fs);
+            }
+
+            return Ok();
+        }
     }
 }

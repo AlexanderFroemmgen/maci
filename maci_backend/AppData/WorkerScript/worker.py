@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+﻿#!/usr/bin/env python2
 # -*- coding: utf-8 -*-
 
 from time import sleep, time
@@ -185,6 +185,40 @@ def executeJob(uri, job_location):
 	log_content = open('./%s/log.txt' % dirname, 'r').read() + logAppend
 
 	if result == 0:
+		print 'Job was executed successfully!'
+		print 'Sending results to server...'
+
+		# handle binary files
+		try:
+			for binary_file in open('./%s/binary_files.txt' % dirname, 'r'):
+				try:
+					global tokenForUri
+					headers = {
+						"Content-Type": "application/octet-stream",
+						"Worker-Token": tokenForUri[uri]
+					}
+
+					filename = binary_file.strip()
+					filename_full = './' + dirname + '/' + filename
+					# new connection per request, otherwise we get response not ready exceptions
+					server = httplib.HTTPConnection(uri)
+					server.request('POST', job_location + '/binaryfiles/' + filename, open(filename_full, 'rb'), headers)
+					file_response = server.getresponse()
+					file_status = file_response.status
+					if file_status == 200:
+						print "File send successfully!"
+					else:
+						print 'File could not be sent. (%s)' % file_status
+						print file_response.read()
+				except:
+					print "posting file failed"
+					log_content += '\n---\nPosting file failed'
+		except:
+			print "posting files failed"
+			log_content += '\n---\nPosting files failed.'
+
+		# handle experiment results and messages
+		server = httplib.HTTPConnection(uri)
 		try:
 			records = open('./%s/result.json' % dirname, 'r').read()
 			messages = open('./%s/messages.json' % dirname, 'r').read()
@@ -193,9 +227,6 @@ def executeJob(uri, job_location):
 			messages = "[]"
 			log_content += "\n---\nresult.json does not exist. Did you forget to call framework.stop()?"
 
-		print 'Job was executed successfully!'
-		print 'Sending results to server...'
-		server = httplib.HTTPConnection(uri)
 		payload = json.dumps({'Log': log_content, 'Records': json.loads(records), 'LogMessages': json.loads(messages)})
 		server.request('PUT', job_location + '/results', payload, getHeadersForUri(uri))
 		response = server.getresponse()
@@ -203,7 +234,6 @@ def executeJob(uri, job_location):
 			raise WorkerNotRegisteredException
 		elif response.status == 200:
 			print 'Results sent successfully!'
-			
 		else:
 			print 'Results could not be sent. (%s)' % response.status
 			print response.read()

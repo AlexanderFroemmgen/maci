@@ -40,6 +40,14 @@ def addLogfile(filename):
     except IOError:
         warn(filename, "IO Error while adding logfile with MACI.")
 
+def addBinaryFile(filename):
+	print "adding binary file", filename
+	try:
+		with open("binary_files.txt", 'w') as myfile:
+			myfile.write(filename + "\n")
+	except IOError:
+		warn(filename, "IO Error adding binary file with MACI.")
+
 def warn(key, message):
 	messages.append({'key': str(key), 'offset': _offsetFromStart(), 'type': 1, 'message': str(message)})
 
