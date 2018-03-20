@@ -201,6 +201,8 @@ namespace Backend.Controllers
             }
             /* write remaining stuff */
             outputFileStream.Write(sb);
+            outputFileStream.Close();
+
             Console.WriteLine("Finished Export");
         }
 
