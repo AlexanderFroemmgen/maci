@@ -1,5 +1,6 @@
 <table class="table table-striped" ng-controller="WorkerListController">
     <tr>
+        <th>Number</th>
         <th>Token</th>
         <th>Connection</th>
         <th>Capabilities</th>
@@ -8,6 +9,7 @@
         <th>Status</th>
     </tr>
     <tr ng-repeat="worker in workers">
+        <td>{{$index}}</td>
         <td>{{worker.Token}}</td>
         <td>{{worker.ConnectionInfo}}</td>
         <td>{{worker.Capabilities.join(', ')}}</td>
