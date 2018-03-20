@@ -103,6 +103,8 @@ namespace Backend.Controllers
                     .Include(s => s.ExperimentInstances)
                     .Single(s => s.Id == id);
 
+            var outputFileStream = new StreamWriter(new FileStream(path, FileMode.Create));
+
             var result = new StringBuilder("simInstanceId;");
 
             foreach (var parameter in data.Parameters.OrderBy(p => p.Name))
@@ -111,12 +113,12 @@ namespace Backend.Controllers
                 result.Append(";");
             }
             result.Append("value;offset;key;key2;key3;\n");
-            System.IO.File.WriteAllText(path, result.ToString());
+            outputFileStream.Write(result);            
             result.Clear();
 
             int counter = -1;
             int total = data.ExperimentInstances.Count();
-                var sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach (var simInstanceBlank in data.ExperimentInstances)
             {
@@ -190,15 +192,15 @@ namespace Backend.Controllers
                 /* end denny */
 
                 counter++;
-                if (counter % 100 == 0)
+                if (counter % 50 == 0)
                 {
                     Console.WriteLine("Exported " + counter.ToString() + " of " + total.ToString());
-                    System.IO.File.AppendAllText(path, sb.ToString());
-sb.Clear();
+                    outputFileStream.Write(sb);
+                    sb.Clear();
                 }
             }
             /* write remaining stuff */
-            System.IO.File.AppendAllText(path, sb.ToString());
+            outputFileStream.Write(sb);
             Console.WriteLine("Finished Export");
         }
 
