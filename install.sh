@@ -8,7 +8,7 @@ sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
 sudo sh -c "echo \"deb [arch=amd64] https://packages.microsoft.com/repos/microsoft-ubuntu-${UBUNTU_CODENAME}-prod $UBUNTU_CODENAME main\" > /etc/apt/sources.list.d/dotnetdev.list"
 
 sudo apt update
-sudo apt install --yes dotnet-sdk-2.0.0 npm nodejs-legacy python-dev screen || exit
+sudo apt install --yes npm nodejs python-dev screen || exit
 sudo npm install gulp -g
 
 # sudo apt install --yes python-pip
