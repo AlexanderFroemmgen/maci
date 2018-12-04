@@ -214,7 +214,7 @@ def executeJob(uri, job_location):
 					print "posting file failed"
 					log_content += '\n---\nPosting file failed'
 		except:
-			print "posting files failed"
+			print "no binary files sent to server"
 			log_content += '\n---\nPosting files failed.'
 
 		# handle experiment results and messages
