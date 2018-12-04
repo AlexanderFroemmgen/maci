@@ -145,5 +145,18 @@ namespace Backend.Controllers
 
             return new ContentResult { Content = launchScript };
         }
+
+        [HttpGet("bootstrap_noshutdown.sh")]
+        public IActionResult GetLaunchScriptNoShutdown()
+        {
+            var maxIdleTimeSec = _context.Configuration.SingleOrDefault().MaxIdleTimeSec;
+
+            var launchScript = _directoryOptions.GetFileContents("AppData/CloudInit/bootstrap_noshutdown.sh")
+                .Replace("{{Backend}}", getOwnUrl())
+                .Replace("{{Capabilities}}", "replaceIfRequired")
+                .Replace("{{MaxIdleTime}}", maxIdleTimeSec.ToString());
+
+            return new ContentResult { Content = launchScript };
+        }
     }
 }

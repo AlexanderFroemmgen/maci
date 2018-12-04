@@ -18,7 +18,11 @@ Run
 ```
 ./start.sh
 ```
-to start MACI. In some cases it can be useful to launch the script as sudo.
+to start MACI. If you experience problems, it sometimes helps to run the script as root, e.g., with
+```
+sudo ./install.sh
+sudo ./start.sh
+```
 
 ### Manual Installation
 
@@ -29,7 +33,10 @@ We do not provide an install script for Windows. You might want to manually exec
 MACI is self-explaining and provides a web interface at http://<SERVER_IP>:63658 (e.g., [http://localhost:63658](http://localhost:63658)).
 Check the web interface for more information.
 
-To access Jupyter outside of localhost, you need to execute "jupyter notebook --ip <SERVER_IP> --port 8888" on the machine, where the start script is running.
+To access Jupyter outside of localhost, start jupyter with
+```
+jupyter notebook --ip <SERVER_IP> --port 8888
+```
 
 ## Contribute
 

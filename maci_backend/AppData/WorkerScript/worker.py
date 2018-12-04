@@ -215,7 +215,7 @@ def executeJob(uri, job_location):
 					log_content += '\n---\nPosting file failed'
 		except:
 			print "no binary files sent to server"
-			log_content += '\n---\nPosting files failed.'
+			log_content += '\n---\nNo binarz files sent to server'
 
 		# handle experiment results and messages
 		server = httplib.HTTPConnection(uri)

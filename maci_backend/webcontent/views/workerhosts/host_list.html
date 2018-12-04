@@ -18,9 +18,12 @@
     <h2>Manual management</h2>
     <p>Alternatives:</p>
     <ul>
-        <li><a ng-href="workers/bootstrap.sh">Download</a> the bootstrap script to manually bootstrap (install and start) new worker instances (recommended). Watch out for the shutdown command, which is required to shut down AWS instances.</li>
-        <li><a ng-href="workers/script.py">Download</a> the worker script to manually start worker, e.g., use <code>python -u script.py --backend {{backend}} --capabilities replaceIfRequired</code> to manually call an existing worker script. You need to replace the "replaceIfRequired" field with your requiered capabilities, e.g. mininet</li>
+        <li><a ng-href="workers/bootstrap_noshutdown.sh">Download</a> the bootstrap script to manually bootstrap (install and start) new worker instances (recommended).</li>
+        <li><a ng-href="workers/bootstrap.sh">Download</a> the bootstrap script to manually bootstrap (install and start) new worker instances and automatically shutdown the machine once the worker finished. This is helpful, e.g., to shutdown cloud instances and safe some money.</li>
+        <li><a ng-href="workers/script.py">Download</a> the worker script to manually start worker, e.g., use <code>python -u script.py --backend {{backend}} --capabilities replaceIfRequired</code> to manually call an existing worker script.</li>
     </ul>
+    <p>Replace <code>replaceIfRequired<code> with the provided capabilities of your worker to allow matching experiment capability requirements and worker capabilities.</p>
+
     <p ng-show="warning_backend_localhost" style="color:red">It seems the backend is running on the localhost. Automatic detection of the backend IP failed. Please specify the correct backend location in the bootstrap script and when starting the worker.</p>
 
     <h2>Automated management</h2>
