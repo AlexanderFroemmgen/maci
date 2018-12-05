@@ -33,11 +33,6 @@ We do not provide an install script for Windows. You might want to manually exec
 MACI is self-explaining and provides a web interface at http://<SERVER_IP>:63658 (e.g., [http://localhost:63658](http://localhost:63658)).
 Check the web interface for more information.
 
-To access Jupyter outside of localhost, start jupyter with
-```
-jupyter notebook --ip <SERVER_IP> --port 8888
-```
-
 ## Contribute
 
 We are happy for all kind of contributions, including bug fixes and additional features.
