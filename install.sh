@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # See also: https://www.microsoft.com/net/core#linuxubuntu
 source /etc/os-release
 sudo apt update || exit

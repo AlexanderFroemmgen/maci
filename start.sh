@@ -1,3 +1,5 @@
+#!/bin/bash
+
 cd maci_backend
 screen -S backend -d -m bash -c "./run.sh"
 
