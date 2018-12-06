@@ -1,3 +1,5 @@
+#!/bin/bash
+
 screen -X -S backend quit
 screen -X -S jupyter quit
 
